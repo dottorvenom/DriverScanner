@@ -19,4 +19,4 @@ pyinstaller --onefile DriverScanner.py
 
 ```
 
-<!-- ![1](img/img1.JPG) -->
+![DriverScanner Screenshot](img/img1.JPG)
