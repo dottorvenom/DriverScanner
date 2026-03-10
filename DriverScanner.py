@@ -7,18 +7,18 @@ from pathlib import Path
 try:
     import pefile
 except ImportError:
-    print("Errore: La libreria 'pefile' non è installata.")
+    print("Error: Library 'pefile' is not installed.")
     sys.exit(1)
 
 
 def scan_drivers(path):
 
     if not os.path.exists(path):
-        print(f"Errore: Il percorso '{path}' non esiste.")
+        print(f"Error: The path '{path}' does not exist.")
         return []
     
     if not os.path.isdir(path):
-        print(f"Errore: '{path}' non è una directory.")
+        print(f"Error: '{path}' is not a directory.")
         return []
     
     try:
@@ -30,7 +30,7 @@ def scan_drivers(path):
         
         return drivers
     except PermissionError:
-        print(f"Errore: Permessi insufficienti per accedere a '{path}'.")
+        print(f"Error: Insufficient permissions to access '{path}'.")
         return []
 
 
@@ -56,20 +56,20 @@ def get_imported_libraries(driver_path):
         
         return imports_dict
     except Exception as e:
-        print(f"   Errore nella lettura di {driver_path}: {e}")
+        print(f"   Error reading {driver_path}: {e}")
         return {}
 
 
 def main():
     if len(sys.argv) < 2:
-        print("Utilizzo: python DriverScanner.py <path>")
+        print("Usage: python DriverScanner.py <path>")
         sys.exit(1)
     
     path = sys.argv[1]
     drivers = scan_drivers(path)
     
     if drivers:
-        print(f"\nDriver .sys che importano ntoskrnl.exe con ZwTerminateProcess:\n")
+        print(f"\nDrivers that import ntoskrnl.exe with ZwTerminateProcess:\n")
         found_count = 0
         
         for driver in drivers:
@@ -91,8 +91,8 @@ def main():
                     
                     print(f"{found_count}. {os.path.basename(driver)} {size_bytes} bytes")
                                        
-                    print(f"   Libreria: {ntoskrnl_lib}")
-                    print(f"   Funzioni importate da {ntoskrnl_lib}:")
+                    print(f"   Lib: {ntoskrnl_lib}")
+                    print(f"   Function imported {ntoskrnl_lib}:")
                     
                     for func in functions:
                         if 'ZwTerminateProcess' in func:
@@ -100,12 +100,13 @@ def main():
                     print("----------")
         
         if found_count == 0:
-            print(f"Nessun driver che importa ntoskrnl.exe con ZwTerminateProcess trovato in '{path}'.")
+            print(f"No driver importing ntoskrnl.exe with ZwTerminateProcess API found in '{path}'.")
         else:
-            print(f"Totale: {found_count}")
+            print(f"Total: {found_count}")
     else:
-        print(f"Nessun file driver .sys trovato in '{path}'.")
+        print(f"No driver file found in '{path}'.")
 
 
 if __name__ == "__main__":
     main()
+
