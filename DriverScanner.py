@@ -69,7 +69,7 @@ def main():
     drivers = scan_drivers(path)
     
     if drivers:
-        print(f"\nDrivers that import ntoskrnl.exe with ZwTerminateProcess:\n")
+        print(f"\nDrivers that import ntoskrnl.exe with ZwTerminateProcess or ZwUnmapViewOfSection:\n")
         found_count = 0
         
         for driver in drivers:
@@ -84,7 +84,7 @@ def main():
             
             if ntoskrnl_lib:
                 functions = imports_dict[ntoskrnl_lib]
-                if any('ZwTerminateProcess' in func for func in functions):
+                if any(func in functions for func in ['ZwTerminateProcess', 'ZwUnmapViewOfSection']):
                     found_count += 1
                     
                     size_bytes = os.path.getsize(driver)
@@ -97,11 +97,13 @@ def main():
                     for func in functions:
                         if 'ZwTerminateProcess' in func:
                             print(f"      - {func}")
+                        if 'ZwUnmapViewOfSection' in func:
+                            print(f"      - {func}")
                             
                     print("----------")
         
         if found_count == 0:
-            print(f"No driver importing ntoskrnl.exe with ZwTerminateProcess API found in '{path}'.")
+            print(f"No driver importing ntoskrnl.exe with ZwTerminateProcess or ZwUnmapViewOfSection API found in '{path}'.")
         else:
             print(f"Total: {found_count}")
     else:
@@ -110,6 +112,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
