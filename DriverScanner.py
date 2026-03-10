@@ -97,6 +97,8 @@ def main():
                     for func in functions:
                         if 'ZwTerminateProcess' in func:
                             print(f"      - {func}")
+                        if 'ZwUnmapViewOfSection' in func:
+                            print(f"      - {func}")
                     print("----------")
         
         if found_count == 0:
@@ -109,4 +111,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
